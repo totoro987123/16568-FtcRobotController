@@ -2,25 +2,57 @@ package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+/**
+ * This is the state abstract class with defines the functionality of a state.
+ * @author Lawson Wright, Brandon Pae
+ * @version 1.0
+ * @since March 8, 2021
+ */
 public abstract class State {
 
     // INSTANCE VARIABLES
-    private HardwareMap hardwareMap;
-    private State nextState;
-    private Boolean running = false;
+    /**
+     * Hardware map instance.
+     */
+    protected HardwareMap hardwareMap;
+
+    /**
+     * The state to start after this one concludes.
+     */
+    protected State nextState;
+
+    /**
+     * Represents if the state is running or not.
+     */
+    protected Boolean running = false;
+
+
 
     // CONSTRUCTORS
+
+    /**
+     * Default state constructor
+     * @param hardwareMap
+     */
     public State(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
 
     // METHODS
-    public void goToNextState() {
+
+    /**
+     * Stops this state and starts the next one.
+     */
+    protected void goToNextState() {
         this.stop();
 
         this.nextState.start();
     }
 
+    /**
+     * Returns the current running state through recursion.
+     * @return
+     */
     public State getCurrentState() {
         if (!this.running) {
             return this.nextState.getCurrentState();
@@ -30,7 +62,19 @@ public abstract class State {
     }
 
     // ABSTRACT METHODS
+
+    /**
+     * Starts the state.
+     */
     public abstract void start();
+
+    /**
+     * Updates the state.
+     */
     public abstract void update();
+
+    /**
+     * Stops the state.
+     */
     public abstract void stop();
 }
