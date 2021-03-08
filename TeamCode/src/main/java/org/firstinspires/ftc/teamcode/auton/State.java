@@ -64,6 +64,11 @@ public abstract class State {
     // ABSTRACT METHODS
 
     /**
+     * Gets the State as a string.
+     * @return the String representation of the state.
+     */
+    public abstract String toString();
+    /**
      * Starts the state.
      */
     public abstract void start();
