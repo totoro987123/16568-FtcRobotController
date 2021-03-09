@@ -24,8 +24,7 @@ public abstract class State {
     /**
      * Represents if the state is running or not.
      */
-    protected Boolean running = false;
-
+    protected boolean running = false;
 
 
     // CONSTRUCTORS

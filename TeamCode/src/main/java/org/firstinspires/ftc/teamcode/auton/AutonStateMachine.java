@@ -25,7 +25,7 @@ public class AutonStateMachine extends OpMode{
      */
     @Override
     public void init() {
-
+        headerState = new DriveState(10, 0.7, hardwareMap);
     }
 
     /**
