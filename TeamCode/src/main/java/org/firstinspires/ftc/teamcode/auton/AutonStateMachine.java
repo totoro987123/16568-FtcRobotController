@@ -39,11 +39,19 @@ public class AutonStateMachine extends OpMode{
     @Override
     public void loop() {
         State currentState = headerState.getCurrentState();
-        currentState.update();
+        boolean running = currentState != null;
+
+        if (running) {
+            currentState.update();
+        }
+
+        String status = running ? "RUNNING" : "COMPLETED";
+        String currentStateString = running ? currentState.toString() : "None";
+
+        telemetry.addLine("CurrentState: " + currentStateString);
+        telemetry.addLine("Status: " + status);
 
         telemetry.addLine("Version: " + this.VERSION);
-        telemetry.addLine("CurrentState: " + currentState.toString());
-
         telemetry.update();
     }
 

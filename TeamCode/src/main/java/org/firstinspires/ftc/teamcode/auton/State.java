@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public abstract class State {
 
     // INSTANCE VARIABLES
+
     /**
      * Hardware map instance.
      */
@@ -45,7 +46,9 @@ public abstract class State {
     protected void goToNextState() {
         this.stop();
 
-        this.nextState.start();
+        if (this.nextState != null) {
+            this.nextState.start();
+        }
     }
 
     /**
@@ -53,12 +56,16 @@ public abstract class State {
      * @return
      */
     public State getCurrentState() {
-        if (!this.running) {
+        if ((!this.running) && (this.nextState == null)) {
+            return null;
+        } else if (!this.running) {
             return this.nextState.getCurrentState();
         }
 
         return this;
     }
+
+
 
     // ABSTRACT METHODS
 

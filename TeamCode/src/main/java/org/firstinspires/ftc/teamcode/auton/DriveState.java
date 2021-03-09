@@ -52,6 +52,7 @@ public class DriveState extends State {
 
     @Override
     public void start() {
+        this.running = true;
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -99,6 +100,7 @@ public class DriveState extends State {
         fr.setPower(0);
         bl.setPower(0);
         br.setPower(0);
+        this.running = false;
     }
 
     @Override
