@@ -14,8 +14,6 @@ public class DriveState extends State {
     private DcMotor fr;
     private DcMotor bl;
     private DcMotor br;
-    private BNO055IMU imu;
-    private BNO055IMU.Parameters parameters;
     private final double wheelCircumference = (1.97 * 2) * Math.PI;
     private int ticksPerTurn = 1120;
     private boolean flReached = false;
@@ -38,16 +36,6 @@ public class DriveState extends State {
         fr.setDirection(DcMotor.Direction.REVERSE);
         bl.setDirection(DcMotor.Direction.FORWARD);
         br.setDirection(DcMotor.Direction.REVERSE);
-
-        parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        imu.initialize(parameters);
     }
 
     @Override

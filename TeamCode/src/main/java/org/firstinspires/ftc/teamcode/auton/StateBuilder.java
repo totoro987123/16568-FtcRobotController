@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.auton;
 public final class StateBuilder {
 
     public static State BuildStates(State[] stateSequence) {
-        for (int i = stateSequence.length-2; i >= 0; i++) {
+        for (int i = stateSequence.length-2; i >= 0; i--) {
             State nextState = stateSequence[i+1];
             stateSequence[i].setNextState(nextState);
         }
