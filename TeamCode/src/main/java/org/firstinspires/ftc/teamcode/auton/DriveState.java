@@ -110,6 +110,6 @@ public class DriveState extends State {
 
     private int distToTicks(double distance) {
         double circumferenceTraveled = distance / wheelCircumference;
-        return (int)(ticksPerTurn * circumferenceTraveled); //encoder value
+        return (int) (ticksPerTurn * circumferenceTraveled); //encoder value
     }
 }

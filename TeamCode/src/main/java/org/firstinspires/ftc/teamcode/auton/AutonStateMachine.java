@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.auton;
 
-import androidx.core.app.ServiceCompat;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-import org.springframework.context.annotation.Configuration;
 
 
 @Autonomous(name = "AutonStateMachine")
@@ -29,7 +25,8 @@ public class AutonStateMachine extends OpMode{
      */
     @Override
     public void init() {
-        headerState = new DriveState(10, 0.7, hardwareMap);
+        State[] stateSequence = {new DriveState(10, 0.7, hardwareMap), new DriveState(15, 0.25, hardwareMap), new DriveState(10, 0.7, hardwareMap)};
+        headerState = StateBuilder.BuildStates(stateSequence);
     }
 
     /**

@@ -67,6 +67,10 @@ public abstract class State {
 
 
 
+    public void setNextState(State nextState) {
+        this.nextState = nextState;
+    }
+
     // ABSTRACT METHODS
 
     /**
