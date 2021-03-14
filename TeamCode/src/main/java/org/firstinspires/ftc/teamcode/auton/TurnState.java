@@ -20,8 +20,8 @@ public class TurnState extends State {
     private BNO055IMU.Parameters parameters;
     private float lastAngle = 0;
     private double gyroTarget;
-    private final double gyroRange = 0.5;
-    private final double minSpeed = 0.2;
+    private final double gyroRange = 5;
+    private final double minSpeed = 0.15;
     private final double addSpeed = 0.1;
     private AngleUnit unit = AngleUnit.DEGREES;
     private ElapsedTime runtime = new ElapsedTime();
@@ -75,7 +75,7 @@ public class TurnState extends State {
 
     @Override
     public void update() {
-        if (Math.abs(gyroTarget - getCurrentHeading()) < 1.5 || runtime.seconds() > timeout) { //reached target or too much elapsed time
+        if (Math.abs(gyroTarget - getCurrentHeading()) < gyroRange || runtime.seconds() > timeout) { //reached target or too much elapsed time
             this.stop();
             this.goToNextState();
         }

@@ -30,8 +30,11 @@ public class AutonStateMachine extends OpMode {
     @Override
     public void init() {
         State[] stateSequence = {
-                new DriveState(10, 0.9, hardwareMap, "front"),
-                new DriveState(12, 0.7, hardwareMap, "back")
+                //new DriveState(10, 0.8, hardwareMap, "front", telemetry),
+                //new StrafeState(12, 0.7, hardwareMap, "back", telemetry),
+                //new StrafeState(15, hardwareMap, "left", telemetry)
+                new TurnState(90, hardwareMap),
+                new TurnState(-45, hardwareMap)
         };
         headerState = StateBuilder.BuildStates(stateSequence);
     }
@@ -56,11 +59,12 @@ public class AutonStateMachine extends OpMode {
         String status = running ? "RUNNING" : "COMPLETED";
         String currentStateString = running ? currentState.toString() : "None";
 
+        /**
         telemetry.addLine("CurrentState: " + currentStateString);
         telemetry.addLine("Status: " + status);
-
         telemetry.addLine("Version: " + this.VERSION);
-        telemetry.update();
+         */
+        //telemetry.update();
     }
 
     @Override
