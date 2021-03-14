@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 
 @Autonomous(name = "AutonStateMachine")
-public class AutonStateMachine extends OpMode{
+public class AutonStateMachine extends OpMode {
 
     // INSTANCE VARIABLES
     /**
@@ -19,6 +19,10 @@ public class AutonStateMachine extends OpMode{
     private State headerState;
 
     // METHODS
+
+    public AutonStateMachine() {
+        super();
+    }
 
     /**
      * Sets up all relevant things for the op-mode.
