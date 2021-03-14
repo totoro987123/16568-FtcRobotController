@@ -54,24 +54,29 @@ public class DriveState extends State {
     public void start() {
         this.running = true;
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        /**
         int currentPosition = (int)((fl.getCurrentPosition() +
                                     fr.getCurrentPosition() +
                                     bl.getCurrentPosition() +
                                     br.getCurrentPosition()) / 4.0);
+        */
+        int currentPosition = (int)((fl.getCurrentPosition() +
+                bl.getCurrentPosition() +
+                br.getCurrentPosition()) / 3.0);
 
         position = currentPosition + distToTicks(distance);
 
         fl.setTargetPosition(position);
-        fr.setTargetPosition(position);
+        //fr.setTargetPosition(position);
         bl.setTargetPosition(position);
         br.setTargetPosition(position);
 
         fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -84,7 +89,8 @@ public class DriveState extends State {
     @Override
     public void update() {
         flReached = Math.abs(fl.getCurrentPosition()) >= Math.abs(position) - threshold;
-        frReached = Math.abs(fr.getCurrentPosition()) >= Math.abs(position) - threshold;
+        //frReached = Math.abs(fr.getCurrentPosition()) >= Math.abs(position) - threshold;
+        frReached = true;
         blReached = Math.abs(bl.getCurrentPosition()) >= Math.abs(position) - threshold;
         brReached = Math.abs(br.getCurrentPosition()) >= Math.abs(position) - threshold;
 
