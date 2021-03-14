@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -23,6 +24,8 @@ public class TurnState extends State {
     private final double minSpeed = 0.2;
     private final double addSpeed = 0.1;
     private AngleUnit unit = AngleUnit.DEGREES;
+    private ElapsedTime runtime = new ElapsedTime();
+    private int timeout = 5;
 
     /**
      * Default state constructor
@@ -58,13 +61,14 @@ public class TurnState extends State {
 
     @Override
     public void start() {
+        runtime.reset();
         lastAngle = getGyroRotation(unit); //get the initial angle, relative to initial config
         gyroCorrect(gyroTarget);
     }
 
     @Override
     public void update() {
-        if (Math.abs(gyroTarget - getCurrentHeading()) < 1.5) { //reached target
+        if (Math.abs(gyroTarget - getCurrentHeading()) < 1.5 || runtime.seconds() > timeout) { //reached target or taken too long
             this.stop();
             this.goToNextState();
         }

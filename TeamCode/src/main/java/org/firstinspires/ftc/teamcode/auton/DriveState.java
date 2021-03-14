@@ -22,6 +22,7 @@ public class DriveState extends State {
     private boolean brReached = false;
     private int threshold = 20;
     private PIDController pidDrive;
+    private String direction;
 
     public DriveState(double target, double speed, HardwareMap hardwareMap) {
         super(hardwareMap); //set the hardwareMap
@@ -33,6 +34,25 @@ public class DriveState extends State {
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
         br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
 
+        //instead of making direction negative to reverse it, try flipping this
+        fl.setDirection(DcMotor.Direction.FORWARD);
+        fr.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.FORWARD);
+        br.setDirection(DcMotor.Direction.REVERSE);
+    }
+
+    //for beta PID-drive
+    public DriveState(double target, HardwareMap hardwareMap, String direction) {
+        super(hardwareMap); //set the hardwareMap
+        distance = target;
+        this.direction = direction;
+
+        fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
+        fr = hardwareMap.dcMotor.get(Settings.FRONT_RIGHT);
+        bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
+        br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
+
+        //instead of making direction negative to reverse it, try flipping this
         fl.setDirection(DcMotor.Direction.FORWARD);
         fr.setDirection(DcMotor.Direction.REVERSE);
         bl.setDirection(DcMotor.Direction.FORWARD);
@@ -75,20 +95,25 @@ public class DriveState extends State {
         //also we need to account for the initial drive speed set by the user
         //in the PID controller, set a threshold value for power so that it never goes under that amt (like 0.1)
         pidDrive = new PIDController(1.5, 0.01, 0.6, hardwareMap, position);
+        driveSpeed = pidDrive.PIDControl();
 
-        fl.setPower(driveSpeed);
-        fr.setPower(driveSpeed);
-        bl.setPower(driveSpeed);
-        br.setPower(driveSpeed);
+        drive(driveSpeed);
     }
 
     @Override
     public void update() {
+        /**
         flReached = Math.abs(fl.getCurrentPosition()) >= Math.abs(position) - threshold;
         //frReached = Math.abs(fr.getCurrentPosition()) >= Math.abs(position) - threshold;
         frReached = true;
         blReached = Math.abs(bl.getCurrentPosition()) >= Math.abs(position) - threshold;
         brReached = Math.abs(br.getCurrentPosition()) >= Math.abs(position) - threshold;
+         */
+
+        flReached = Math.abs(fl.getCurrentPosition() - position) < threshold;
+        frReached = true;
+        blReached = Math.abs(bl.getCurrentPosition() - position) < threshold;
+        brReached = Math.abs(br.getCurrentPosition() - position) < threshold;
 
         if (flReached && frReached && blReached && brReached) {
             this.stop();
@@ -101,16 +126,20 @@ public class DriveState extends State {
 
     @Override
     public void stop() {
-        fl.setPower(0);
-        fr.setPower(0);
-        bl.setPower(0);
-        br.setPower(0);
+        drive(0);
         this.running = false;
     }
 
     @Override
     public String toString() {
         return "DriveState: Power = " + driveSpeed + ", Distance =" + distance;
+    }
+
+    public void drive(double power) {
+        fl.setPower(power);
+        fr.setPower(power);
+        bl.setPower(power);
+        br.setPower(power);
     }
 
     private int distToTicks(double distance) {
