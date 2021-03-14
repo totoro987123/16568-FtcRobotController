@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.auton;
 
 public final class StateBuilder {
 
-    public static State BuildStates(State[] states) {
-        for (int i = states.length-2; i >= 0; i++) {
-            State nextState = states[i+1];
-            states[i].setNextState(nextState);
+    public static State BuildStates(State[] stateSequence) {
+        for (int i = stateSequence.length-2; i >= 0; i++) {
+            State nextState = stateSequence[i+1];
+            stateSequence[i].setNextState(nextState);
         }
 
-        return states[0];
+        return stateSequence[0];
     }
 }
