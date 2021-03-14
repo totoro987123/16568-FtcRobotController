@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Settings;
+import org.firstinspires.ftc.teamcode.framework.annotations.Initialize;
 
 public class DriveState extends State {
 
@@ -32,40 +33,21 @@ public class DriveState extends State {
     private PIDController pidDrive;
     private String direction;
     private double realSpeed;
-    private Telemetry telemetry;
 
-    public DriveState(double target, double speed, HardwareMap hardwareMap) {
-        super(hardwareMap); //set the hardwareMap
+    public DriveState(double target, double speed) {
         distance = target;
         driveSpeed = speed;
-
-        fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
-        fr = hardwareMap.dcMotor.get(Settings.FRONT_RIGHT);
-        bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
-        br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
-
-        //reverse directions for tile-runner
-        /**
-        fl.setDirection(DcMotor.Direction.FORWARD);
-        fr.setDirection(DcMotor.Direction.REVERSE);
-        bl.setDirection(DcMotor.Direction.FORWARD);
-        br.setDirection(DcMotor.Direction.REVERSE);
-         */
-
-        fl.setDirection(DcMotor.Direction.REVERSE);
-        fr.setDirection(DcMotor.Direction.FORWARD);
-        bl.setDirection(DcMotor.Direction.REVERSE);
-        br.setDirection(DcMotor.Direction.FORWARD);
     }
 
     //new method for beta PID-drive
-    public DriveState(double distance, double maxSpeed, HardwareMap hardwareMap, String direction, Telemetry telemetry) {
-        super(hardwareMap); //set the hardwareMap
+    public DriveState(double distance, double maxSpeed, String direction) {
         this.distance = distance;
         this.maxSpeed = maxSpeed;
         this.direction = direction;
-        this.telemetry = telemetry;
+    }
 
+    @Initialize
+    public void init() {
         fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
         fr = hardwareMap.dcMotor.get(Settings.FRONT_RIGHT);
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);

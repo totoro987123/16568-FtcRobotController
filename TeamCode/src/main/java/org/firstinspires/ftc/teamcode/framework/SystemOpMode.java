@@ -32,6 +32,8 @@ public abstract class SystemOpMode extends OpMode {
         this.loadServices();
 
         this.loadAllFields();
+
+        this.loadFields(this);
     }
 
     private void loadOpModeVariables() {

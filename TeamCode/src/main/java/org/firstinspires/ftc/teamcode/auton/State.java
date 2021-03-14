@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.framework.annotations.Loadable;
+
 /**
  * This is the state abstract class with defines the functionality of a state.
  * @author Lawson Wright, Brandon Pae
@@ -15,7 +18,11 @@ public abstract class State {
     /**
      * Hardware map instance.
      */
-    protected HardwareMap hardwareMap;
+    @Loadable
+    public HardwareMap hardwareMap;
+
+    @Loadable
+    public Telemetry telemetry;
 
     /**
      * The state to start after this one concludes.
@@ -32,11 +39,8 @@ public abstract class State {
 
     /**
      * Default state constructor
-     * @param hardwareMap
      */
-    public State(HardwareMap hardwareMap) {
-        this.hardwareMap = hardwareMap;
-    }
+    public State() { }
 
     // METHODS
 

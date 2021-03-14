@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.framework.SystemOpMode;
+import org.firstinspires.ftc.teamcode.framework.annotations.Loadable;
+
 
 @Autonomous(name = "AutonStateMachine")
-public class AutonStateMachine extends OpMode {
+public class AutonStateMachine extends SystemOpMode {
 
     // INSTANCE VARIABLES
     /**
@@ -18,10 +21,13 @@ public class AutonStateMachine extends OpMode {
      */
     private State headerState;
 
+    @Loadable
+    public StateBuilder stateBuilder;
+
     // METHODS
 
     public AutonStateMachine() {
-        super();
+        super(AutonStateMachine.class);
     }
 
     /**
@@ -30,13 +36,13 @@ public class AutonStateMachine extends OpMode {
     @Override
     public void init() {
         State[] stateSequence = {
-                //new DriveState(10, 0.8, hardwareMap, "front", telemetry),
+                this.create(DriveState.class,10, 0.8, "front")
                 //new StrafeState(12, 0.7, hardwareMap, "back", telemetry),
                 //new StrafeState(15, hardwareMap, "left", telemetry)
-                new TurnState(90, hardwareMap),
-                new TurnState(-45, hardwareMap)
+                //new TurnState(90, hardwareMap),
+                //new TurnState(-45, hardwareMap)
         };
-        headerState = StateBuilder.BuildStates(stateSequence);
+        headerState = this.stateBuilder.buildStates(stateSequence);
     }
 
     /**
