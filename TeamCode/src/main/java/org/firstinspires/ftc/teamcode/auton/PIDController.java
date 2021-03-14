@@ -24,12 +24,12 @@ public class PIDController {
 
     private int targetPosition;
 
-    public PIDController(double Kp, double Ki, double Kd, HardwareMap hardwareMap, int position) {
+    public PIDController(double Kp, double Ki, double Kd, HardwareMap hardwareMap, int position, double maxSpeed) {
         kp = Kp;
         ki = Ki;
         kd = Kd;
-
         targetPosition = position;
+        maxOutput = maxSpeed;
 
         fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
         fr = hardwareMap.dcMotor.get(Settings.FRONT_RIGHT);

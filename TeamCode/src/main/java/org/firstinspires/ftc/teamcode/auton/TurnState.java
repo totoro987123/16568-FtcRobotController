@@ -43,10 +43,17 @@ public class TurnState extends State {
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
         br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
 
-        fl.setDirection(DcMotor.Direction.FORWARD);
-        fr.setDirection(DcMotor.Direction.REVERSE);
-        bl.setDirection(DcMotor.Direction.FORWARD);
-        br.setDirection(DcMotor.Direction.REVERSE);
+        /**
+         fl.setDirection(DcMotor.Direction.FORWARD);
+         fr.setDirection(DcMotor.Direction.REVERSE);
+         bl.setDirection(DcMotor.Direction.FORWARD);
+         br.setDirection(DcMotor.Direction.REVERSE);
+         */
+
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        fr.setDirection(DcMotor.Direction.FORWARD);
+        bl.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.FORWARD);
 
         parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -62,18 +69,18 @@ public class TurnState extends State {
     @Override
     public void start() {
         runtime.reset();
-        lastAngle = getGyroRotation(unit); //get the initial angle, relative to initial config
+        lastAngle = getGyroRotation(unit); //get the initial angle, relative to beginning configuration
         gyroCorrect(gyroTarget);
     }
 
     @Override
     public void update() {
-        if (Math.abs(gyroTarget - getCurrentHeading()) < 1.5 || runtime.seconds() > timeout) { //reached target or taken too long
+        if (Math.abs(gyroTarget - getCurrentHeading()) < 1.5 || runtime.seconds() > timeout) { //reached target or too much elapsed time
             this.stop();
             this.goToNextState();
         }
         else {
-            gyroCorrect(gyroTarget); //re-run gyroCorrect to adjust speed
+            gyroCorrect(gyroTarget); //re-run method to adjust speed
         }
     }
 

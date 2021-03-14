@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Settings;
 
 public class DriveState extends State {
 
     private double driveSpeed;
+    private double maxSpeed;
     private double distance;
     private int position;
     private DcMotor fl;
@@ -34,17 +36,25 @@ public class DriveState extends State {
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
         br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
 
-        //instead of making direction negative to reverse it, try flipping this
+        //reverse directions for tile-runner
+        /**
         fl.setDirection(DcMotor.Direction.FORWARD);
         fr.setDirection(DcMotor.Direction.REVERSE);
         bl.setDirection(DcMotor.Direction.FORWARD);
         br.setDirection(DcMotor.Direction.REVERSE);
+         */
+
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        fr.setDirection(DcMotor.Direction.FORWARD);
+        bl.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.FORWARD);
     }
 
-    //for beta PID-drive
-    public DriveState(double target, HardwareMap hardwareMap, String direction) {
+    //new method for beta PID-drive
+    public DriveState(double distance, double maxSpeed, HardwareMap hardwareMap, String direction) {
         super(hardwareMap); //set the hardwareMap
-        distance = target;
+        this.distance = distance;
+        this.maxSpeed = maxSpeed;
         this.direction = direction;
 
         fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
@@ -52,11 +62,18 @@ public class DriveState extends State {
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
         br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
 
-        //instead of making direction negative to reverse it, try flipping this
-        fl.setDirection(DcMotor.Direction.FORWARD);
-        fr.setDirection(DcMotor.Direction.REVERSE);
-        bl.setDirection(DcMotor.Direction.FORWARD);
-        br.setDirection(DcMotor.Direction.REVERSE);
+        //reverse directions for tile-runner
+        /**
+         fl.setDirection(DcMotor.Direction.FORWARD);
+         fr.setDirection(DcMotor.Direction.REVERSE);
+         bl.setDirection(DcMotor.Direction.FORWARD);
+         br.setDirection(DcMotor.Direction.REVERSE);
+         */
+
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        fr.setDirection(DcMotor.Direction.FORWARD);
+        bl.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.FORWARD);
     }
 
     @Override
@@ -94,7 +111,7 @@ public class DriveState extends State {
         //consider just having a method for this, might be simpler
         //also we need to account for the initial drive speed set by the user
         //in the PID controller, set a threshold value for power so that it never goes under that amt (like 0.1)
-        pidDrive = new PIDController(1.5, 0.01, 0.6, hardwareMap, position);
+        pidDrive = new PIDController(1.5, 0.01, 0.6, hardwareMap, position, maxSpeed);
         driveSpeed = pidDrive.PIDControl();
 
         drive(driveSpeed);
@@ -120,7 +137,8 @@ public class DriveState extends State {
             this.goToNextState();
         }
         else {
-            pidDrive.PIDControl();
+            driveSpeed = pidDrive.PIDControl();
+            drive(driveSpeed);
         }
     }
 
@@ -136,10 +154,32 @@ public class DriveState extends State {
     }
 
     public void drive(double power) {
-        fl.setPower(power);
-        fr.setPower(power);
-        bl.setPower(power);
-        br.setPower(power);
+        switch (direction) {
+            case "front":
+                fl.setPower(power);
+                fr.setPower(power);
+                bl.setPower(power);
+                br.setPower(power);
+                break;
+            case "back":
+                fl.setPower(-power);
+                fr.setPower(-power);
+                bl.setPower(-power);
+                br.setPower(-power);
+                break;
+            case "left":
+                fl.setPower(-power);
+                fr.setPower(power);
+                bl.setPower(power);
+                br.setPower(-power);
+                break;
+            case "right":
+                fl.setPower(power);
+                fr.setPower(-power);
+                bl.setPower(-power);
+                br.setPower(power);
+                break;
+        }
     }
 
     private int distToTicks(double distance) {
