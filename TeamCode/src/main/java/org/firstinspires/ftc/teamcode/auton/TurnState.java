@@ -32,6 +32,7 @@ public class TurnState extends State {
     public TurnState(double gyroTarget, HardwareMap hardwareMap) {
         super(hardwareMap);
 
+        this.running = true;
         this.gyroTarget = gyroTarget; //target angle
 
         fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
@@ -136,5 +137,4 @@ public class TurnState extends State {
         //first angle = the x-coordinate, or heading
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, unit).firstAngle;
     }
-
 }

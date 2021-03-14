@@ -21,6 +21,7 @@ public class DriveState extends State {
     private boolean blReached = false;
     private boolean brReached = false;
     private int threshold = 20;
+    private PIDController pidDrive;
 
     public DriveState(double target, double speed, HardwareMap hardwareMap) {
         super(hardwareMap); //set the hardwareMap
@@ -41,6 +42,7 @@ public class DriveState extends State {
     @Override
     public void start() {
         this.running = true;
+
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -68,6 +70,12 @@ public class DriveState extends State {
         bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        //this part needs to be changed, because it sets the power twice
+        //consider just having a method for this, might be simpler
+        //also we need to account for the initial drive speed set by the user
+        //in the PID controller, set a threshold value for power so that it never goes under that amt (like 0.1)
+        pidDrive = new PIDController(1.5, 0.01, 0.6, hardwareMap, position);
+
         fl.setPower(driveSpeed);
         fr.setPower(driveSpeed);
         bl.setPower(driveSpeed);
@@ -85,6 +93,9 @@ public class DriveState extends State {
         if (flReached && frReached && blReached && brReached) {
             this.stop();
             this.goToNextState();
+        }
+        else {
+            pidDrive.PIDControl();
         }
     }
 
