@@ -12,10 +12,16 @@
 // Custom definitions may go here
 
 // Include common definitions from above.
+plugins {
+    id "org.springframework.boot" version "2.0.1.RELEASE"
+}
+
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+apply plugin: 'org.springframework.boot'
 
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.0.1.RELEASE'
 }
