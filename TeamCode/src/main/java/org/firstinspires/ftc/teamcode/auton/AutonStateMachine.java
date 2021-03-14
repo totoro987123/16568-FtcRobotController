@@ -29,7 +29,10 @@ public class AutonStateMachine extends OpMode {
      */
     @Override
     public void init() {
-        State[] stateSequence = {new DriveState(10, 0.7, hardwareMap), new DriveState(15, 0.25, hardwareMap), new DriveState(10, 0.7, hardwareMap)};
+        State[] stateSequence = {
+                new DriveState(10, 0.9, hardwareMap, "front"),
+                new DriveState(12, 0.7, hardwareMap, "back")
+        };
         headerState = StateBuilder.BuildStates(stateSequence);
     }
 

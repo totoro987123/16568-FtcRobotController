@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -23,6 +24,8 @@ public class TurnState extends State {
     private final double minSpeed = 0.2;
     private final double addSpeed = 0.1;
     private AngleUnit unit = AngleUnit.DEGREES;
+    private ElapsedTime runtime = new ElapsedTime();
+    private int timeout = 5;
 
     /**
      * Default state constructor
@@ -40,10 +43,17 @@ public class TurnState extends State {
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
         br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
 
-        fl.setDirection(DcMotor.Direction.FORWARD);
-        fr.setDirection(DcMotor.Direction.REVERSE);
-        bl.setDirection(DcMotor.Direction.FORWARD);
-        br.setDirection(DcMotor.Direction.REVERSE);
+        /**
+         fl.setDirection(DcMotor.Direction.FORWARD);
+         fr.setDirection(DcMotor.Direction.REVERSE);
+         bl.setDirection(DcMotor.Direction.FORWARD);
+         br.setDirection(DcMotor.Direction.REVERSE);
+         */
+
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        fr.setDirection(DcMotor.Direction.FORWARD);
+        bl.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.FORWARD);
 
         parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -58,18 +68,19 @@ public class TurnState extends State {
 
     @Override
     public void start() {
-        lastAngle = getGyroRotation(unit); //get the initial angle, relative to initial config
+        runtime.reset();
+        lastAngle = getGyroRotation(unit); //get the initial angle, relative to beginning configuration
         gyroCorrect(gyroTarget);
     }
 
     @Override
     public void update() {
-        if (Math.abs(gyroTarget - getCurrentHeading()) < 1.5) { //reached target
+        if (Math.abs(gyroTarget - getCurrentHeading()) < 1.5 || runtime.seconds() > timeout) { //reached target or too much elapsed time
             this.stop();
             this.goToNextState();
         }
         else {
-            gyroCorrect(gyroTarget); //re-run gyroCorrect to adjust speed
+            gyroCorrect(gyroTarget); //re-run method to adjust speed
         }
     }
 
