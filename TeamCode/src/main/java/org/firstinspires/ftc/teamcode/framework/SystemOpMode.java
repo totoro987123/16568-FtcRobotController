@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.framework;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.framework.annotations.*;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections8.Reflections;
+import org.reflections8.scanners.SubTypesScanner;
+import org.reflections8.scanners.TypeAnnotationsScanner;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class SystemOpMode extends OpMode {
-
 
     private final String classPath;
 
