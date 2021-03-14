@@ -5,17 +5,10 @@ import androidx.core.app.ServiceCompat;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 
 @Autonomous(name = "AutonStateMachine")
-@Configuration
-@EnableAutoConfiguration
 public class AutonStateMachine extends OpMode{
 
     // INSTANCE VARIABLES
@@ -36,9 +29,6 @@ public class AutonStateMachine extends OpMode{
      */
     @Override
     public void init() {
-        SpringApplication app = new SpringApplication(AutonStateMachine.class);
-        app.setWebApplicationType(WebApplicationType.NONE);
-
         headerState = new DriveState(10, 0.7, hardwareMap);
     }
 
