@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.framework;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.framework.annotations.*;
 import org.reflections8.Reflections;
 import org.reflections8.scanners.SubTypesScanner;
@@ -32,7 +35,9 @@ public abstract class SystemOpMode extends OpMode {
     }
 
     private void loadOpModeVariables() {
-        // DO THIS
+        this.loadables.put(OpMode.class, this);
+        this.loadables.put(Telemetry.class, this.telemetry);
+        this.loadables.put(HardwareMap.class, this.hardwareMap);
     }
 
     private void loadFields(Object object) {
