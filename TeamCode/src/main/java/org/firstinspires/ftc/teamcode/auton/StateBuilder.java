@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode.auton;
 
 import org.firstinspires.ftc.teamcode.framework.annotations.Service;
 
-@Service
-public class StateBuilder {
+public final class StateBuilder {
 
-    public State buildStates(State[] stateSequence) {
+    public static State buildStates(State[] stateSequence) {
         for (int i = stateSequence.length-2; i >= 0; i--) {
             State nextState = stateSequence[i+1];
             stateSequence[i].setNextState(nextState);

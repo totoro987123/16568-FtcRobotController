@@ -5,15 +5,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.framework.annotations.*;
-import org.reflections8.Reflections;
-import org.reflections8.scanners.SubTypesScanner;
-import org.reflections8.scanners.TypeAnnotationsScanner;
+import org.firstinspires.ftc.teamcode.framework.reflection.AnnotationDetector;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +25,7 @@ public abstract class SystemOpMode extends OpMode {
 
     private final String classPath;
 
-    private Map<Class<?>, Object> loadables = new HashMap<Class<?>,Object>();
+    private final Map<Class<?>, Object> loadables = new HashMap<Class<?>,Object>();
 
     public SystemOpMode(Class<?> clazz) {
         super();
@@ -83,9 +87,50 @@ public abstract class SystemOpMode extends OpMode {
 
 
     private Set<Class<?>> findServiceClasses() {
+        final AnnotationDetector.TypeReporter reporter = new AnnotationDetector.TypeReporter() {
+
+            @Override
+            public void reportTypeAnnotation(Class<? extends Annotation> annotation, String className) {
+                try {
+                    Class<?> serviceClass = Class.forName(className);
+
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public Class<? extends Annotation>[] annotations() {
+                return new Class[]{Service.class};
+            }
+        };
+
+        final AnnotationDetector cf = new AnnotationDetector(reporter);
+
+        try {
+            cf.detect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         Reflections reflectionsHelper = new Reflections(this.classPath, new SubTypesScanner(), new TypeAnnotationsScanner());
 
         return reflectionsHelper.getTypesAnnotatedWith(Service.class);
+    }
+
+    private void loadService(Class<?> serviceClass) {
+        try {
+            Constructor<?> constructor = serviceClass.getConstructor();
+            Object service = constructor.newInstance();
+
+            this.loadables.put(serviceClass, service);
+        } catch (NoSuchMethodException | SecurityException
+                | InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadServices() {

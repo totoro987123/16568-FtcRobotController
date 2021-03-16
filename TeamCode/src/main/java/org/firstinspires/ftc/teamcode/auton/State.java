@@ -18,11 +18,8 @@ public abstract class State {
     /**
      * Hardware map instance.
      */
-    @Loadable
-    public HardwareMap hardwareMap;
+    protected HardwareMap hardwareMap;
 
-    @Loadable
-    public Telemetry telemetry;
 
     /**
      * The state to start after this one concludes.
@@ -40,7 +37,9 @@ public abstract class State {
     /**
      * Default state constructor
      */
-    public State() { }
+    public State(HardwareMap hardwareMap) {
+        this.hardwareMap = hardwareMap;
+    }
 
     // METHODS
 

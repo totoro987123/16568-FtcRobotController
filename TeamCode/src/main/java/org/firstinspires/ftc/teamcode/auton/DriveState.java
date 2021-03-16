@@ -32,18 +32,23 @@ public class DriveState extends State {
     private int threshold = 75;
     private PIDController pidDrive;
     private String direction;
+    private Telemetry telemetry;
     private double realSpeed;
 
-    public DriveState(double target, double speed) {
+    public DriveState(double target, double speed, HardwareMap hardwareMap, Telemetry telemetry) {
+        super(hardwareMap);
+        this.telemetry = telemetry;
         distance = target;
         driveSpeed = speed;
     }
 
     //new method for beta PID-drive
-    public DriveState(double distance, double maxSpeed, String direction) {
+    public DriveState(double distance, double maxSpeed, String direction, HardwareMap hardwareMap, Telemetry telemetry) {
+        super(hardwareMap);
         this.distance = distance;
         this.maxSpeed = maxSpeed;
         this.direction = direction;
+        this.telemetry = telemetry;
     }
 
     @Initialize
@@ -72,7 +77,7 @@ public class DriveState extends State {
         this.running = true;
 
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -93,7 +98,7 @@ public class DriveState extends State {
         setTargets(); //set target positions for each motor
 
         fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -134,7 +139,7 @@ public class DriveState extends State {
         }
 
         telemetry.addLine("FL Diff: " + Math.abs(fl.getCurrentPosition() - flTargetPosition));
-        //telemetry.addLine("FR Power: " + fl);
+        telemetry.addLine("FR Power: " + fl);
         telemetry.addLine("BL Diff: " + Math.abs(bl.getCurrentPosition() - blTargetPosition));
         telemetry.addLine("BR Diff: " + Math.abs(br.getCurrentPosition() - brTargetPosition));
         telemetry.addLine("actualSpeed : " + realSpeed);
@@ -188,31 +193,31 @@ public class DriveState extends State {
         switch (direction) {
             case "front":
                 flTargetPosition = position;
-                //frTargetPosition = position;
+                frTargetPosition = position;
                 blTargetPosition = position;
                 brTargetPosition = position;
                 break;
             case "back":
                 flTargetPosition = -position;
-                //frTargetPosition = -position;
+                frTargetPosition = -position;
                 blTargetPosition = -position;
                 brTargetPosition = -position;
                 break;
             case "left":
                 flTargetPosition = -position;
-                //frTargetPosition = position;
+                frTargetPosition = position;
                 blTargetPosition = position;
                 brTargetPosition = -position;
                 break;
             case "right":
                 flTargetPosition = position;
-                //frTargetPosition = -position;
+                frTargetPosition = -position;
                 blTargetPosition = -position;
                 brTargetPosition = position;
                 break;
         }
         fl.setTargetPosition(flTargetPosition);
-        //fr.setTargetPosition(-position);
+        fr.setTargetPosition(-position);
         bl.setTargetPosition(blTargetPosition);
         br.setTargetPosition(brTargetPosition);
     }

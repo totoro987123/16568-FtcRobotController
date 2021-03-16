@@ -33,7 +33,7 @@ public class TurnState extends State {
      * @param hardwareMap
      */
     public TurnState(double gyroTarget, HardwareMap hardwareMap) {
-        super();
+        super(hardwareMap);
 
         this.running = true;
         this.gyroTarget = gyroTarget; //target angle

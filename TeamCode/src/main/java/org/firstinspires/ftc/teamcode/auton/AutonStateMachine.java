@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.framework.annotations.Loadable;
 
 
 @Autonomous(name = "AutonStateMachine")
-public class AutonStateMachine extends SystemOpMode {
+public class AutonStateMachine extends OpMode {
 
     // INSTANCE VARIABLES
     /**
@@ -21,14 +21,8 @@ public class AutonStateMachine extends SystemOpMode {
      */
     private State headerState;
 
-    @Loadable
-    public StateBuilder stateBuilder;
-
     // METHODS
 
-    public AutonStateMachine() {
-        super(AutonStateMachine.class);
-    }
 
     /**
      * Sets up all relevant things for the op-mode.
@@ -36,13 +30,13 @@ public class AutonStateMachine extends SystemOpMode {
     @Override
     public void init() {
         State[] stateSequence = {
-                this.create(DriveState.class,10, 0.8, "front")
+                new DriveState(10, 0.8, "front")
                 //new StrafeState(12, 0.7, hardwareMap, "back", telemetry),
                 //new StrafeState(15, hardwareMap, "left", telemetry)
                 //new TurnState(90, hardwareMap),
                 //new TurnState(-45, hardwareMap)
         };
-        headerState = this.stateBuilder.buildStates(stateSequence);
+        headerState = StateBuilder.buildStates(stateSequence);
     }
 
     /**

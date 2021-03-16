@@ -46,7 +46,7 @@ public class StrafeState extends State {
     private BNO055IMU.Parameters parameters;
 
     public StrafeState(double target, double speed, HardwareMap hardwareMap) {
-        super(); //set the hardwareMap
+        super(hardwareMap); //set the hardwareMap
         distance = target;
         driveSpeed = speed;
 
@@ -71,7 +71,7 @@ public class StrafeState extends State {
 
     //new method for beta PID-drive
     public StrafeState(double distance, HardwareMap hardwareMap, String direction, Telemetry telemetry) {
-        super(); //set the hardwareMap
+        super(hardwareMap); //set the hardwareMap
         this.distance = distance;
         this.maxSpeed = maxSpeed;
         this.direction = direction;
