@@ -29,7 +29,6 @@ public class TurnState extends State {
 
     /**
      * Default state constructor
-     *
      * @param hardwareMap
      */
     public TurnState(double gyroTarget, HardwareMap hardwareMap) {
