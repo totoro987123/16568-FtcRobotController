@@ -3,38 +3,31 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.framework.SystemOpMode;
-import org.firstinspires.ftc.teamcode.framework.annotations.Loadable;
-
-
-@Autonomous(name = "AutonStateMachine")
+@Autonomous(name = "Autonomous-V1")
 public class AutonStateMachine extends OpMode {
 
     // INSTANCE VARIABLES
     /**
      * Version of the op-mode file.
      */
-    private final double VERSION = 1.0;
+    private final double VERSION = 1.1;
 
     /**
      * The first state to be run.
      */
     private State headerState;
 
+
     // METHODS
-
-
     /**
      * Sets up all relevant things for the op-mode.
      */
     @Override
     public void init() {
         State[] stateSequence = {
-                new DriveState(10, 0.8, "front")
-                //new StrafeState(12, 0.7, hardwareMap, "back", telemetry),
-                //new StrafeState(15, hardwareMap, "left", telemetry)
-                //new TurnState(90, hardwareMap),
-                //new TurnState(-45, hardwareMap)
+                new DriveState(10, 0.8, "front", hardwareMap, telemetry),
+                new TurnState(90, hardwareMap, telemetry),
+                new TurnState(-45, hardwareMap, telemetry)
         };
         headerState = StateBuilder.buildStates(stateSequence);
     }
@@ -59,12 +52,10 @@ public class AutonStateMachine extends OpMode {
         String status = running ? "RUNNING" : "COMPLETED";
         String currentStateString = running ? currentState.toString() : "None";
 
-        /**
         telemetry.addLine("CurrentState: " + currentStateString);
         telemetry.addLine("Status: " + status);
         telemetry.addLine("Version: " + this.VERSION);
-         */
-        //telemetry.update();
+        telemetry.update();
     }
 
     @Override

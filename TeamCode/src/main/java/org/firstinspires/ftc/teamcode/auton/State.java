@@ -14,12 +14,10 @@ import org.firstinspires.ftc.teamcode.framework.annotations.Loadable;
 public abstract class State {
 
     // INSTANCE VARIABLES
-
     /**
      * Hardware map instance.
      */
     protected HardwareMap hardwareMap;
-
 
     /**
      * The state to start after this one concludes.
@@ -31,9 +29,7 @@ public abstract class State {
      */
     protected boolean running = false;
 
-
     // CONSTRUCTORS
-
     /**
      * Default state constructor
      */
@@ -42,7 +38,6 @@ public abstract class State {
     }
 
     // METHODS
-
     /**
      * Stops this state and starts the next one.
      */
@@ -68,14 +63,11 @@ public abstract class State {
         return this;
     }
 
-
-
     public void setNextState(State nextState) {
         this.nextState = nextState;
     }
 
     // ABSTRACT METHODS
-
     /**
      * Gets the State as a string.
      * @return the String representation of the state.

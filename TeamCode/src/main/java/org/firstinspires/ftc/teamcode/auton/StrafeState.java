@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Hardware;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -70,8 +71,8 @@ public class StrafeState extends State {
     }
 
     //new method for beta PID-drive
-    public StrafeState(double distance, HardwareMap hardwareMap, String direction, Telemetry telemetry) {
-        super(hardwareMap); //set the hardwareMap
+    public StrafeState(double distance, double maxSpeed, String direction, HardwareMap hardwareMap, Telemetry telemetry) {
+        super(hardwareMap);
         this.distance = distance;
         this.maxSpeed = maxSpeed;
         this.direction = direction;
@@ -111,27 +112,21 @@ public class StrafeState extends State {
         this.running = true;
 
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        if (direction.equals("right")){
+            distance *= -1;
+        }
+
         strafe(distance);
-
-        //this part needs to be changed, because it sets the power twice
-        //consider just having a method for this, might be simpler
-        //also we need to account for the initial drive speed set by the user
-        //in the PID controller, set a threshold value for power so that it never goes under that amt (like 0.1)
-        //pidDrive = new PIDController(1.7, 0.001, 0.6, hardwareMap, flTargetPosition, maxSpeed);
-        //driveSpeed = pidDrive.PIDControl();
-
-        //drive(driveSpeed);
     }
 
     @Override
     public void update() {
         flReached = Math.abs(fl.getCurrentPosition()) >= Math.abs(flTargetPosition) - threshold;
-        //frReached = Math.abs(fr.getCurrentPosition()) >= Math.abs(frTargetPosition) - threshold;
-        frReached = true;
+        frReached = Math.abs(fr.getCurrentPosition()) >= Math.abs(frTargetPosition) - threshold;
         blReached = Math.abs(bl.getCurrentPosition()) >= Math.abs(blTargetPosition) - threshold;
         brReached = Math.abs(br.getCurrentPosition()) >= Math.abs(brTargetPosition) - threshold;
 
@@ -162,7 +157,7 @@ public class StrafeState extends State {
         }
 
         telemetry.addLine("FL Diff: " + Math.abs(fl.getCurrentPosition() - flTargetPosition));
-        //telemetry.addLine("FR Power: " + fl);
+        telemetry.addLine("FR Power: " + Math.abs(fr.getCurrentPosition() - frTargetPosition));
         telemetry.addLine("BL Diff: " + Math.abs(bl.getCurrentPosition() - blTargetPosition));
         telemetry.addLine("BR Diff: " + Math.abs(br.getCurrentPosition() - brTargetPosition));
         telemetry.update();
@@ -213,7 +208,7 @@ public class StrafeState extends State {
     }
 
     //obsolete once all four enocders are used, can simply set a constant power
-    //the target encoder value is what matters
+    //bc the target encoder value is what matters
     public void drive(double power) {
         switch (direction) {
             case "front":
@@ -241,48 +236,5 @@ public class StrafeState extends State {
                 br.setPower(power);
                 break;
         }
-    }
-
-    //target position changes based on direction of motion
-    private void setTargets() {
-        switch (direction) {
-            case "front":
-                flTargetPosition = position;
-                //frTargetPosition = position;
-                blTargetPosition = position;
-                brTargetPosition = position;
-                break;
-            case "back":
-                flTargetPosition = -position;
-                //frTargetPosition = -position;
-                blTargetPosition = -position;
-                brTargetPosition = -position;
-                break;
-            case "left":
-                flTargetPosition = -position;
-                //frTargetPosition = position;
-                blTargetPosition = position;
-                brTargetPosition = -position;
-                break;
-            case "right":
-                flTargetPosition = position;
-                //frTargetPosition = -position;
-                blTargetPosition = -position;
-                brTargetPosition = position;
-                break;
-        }
-        fl.setTargetPosition(flTargetPosition);
-        //fr.setTargetPosition(-position);
-        bl.setTargetPosition(blTargetPosition);
-        br.setTargetPosition(brTargetPosition);
-    }
-
-    public double getPower() {
-        return fr.getPower();
-    }
-
-    private int distToTicks(double distance) {
-        double circumferenceTraveled = distance / wheelCircumference;
-        return (int) (ticksPerTurn * circumferenceTraveled); //encoder value
     }
 }

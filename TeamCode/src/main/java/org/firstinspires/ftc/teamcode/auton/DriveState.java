@@ -35,30 +35,19 @@ public class DriveState extends State {
     private Telemetry telemetry;
     private double realSpeed;
 
-    public DriveState(double target, double speed, HardwareMap hardwareMap, Telemetry telemetry) {
-        super(hardwareMap);
-        this.telemetry = telemetry;
-        distance = target;
-        driveSpeed = speed;
-    }
-
-    //new method for beta PID-drive
     public DriveState(double distance, double maxSpeed, String direction, HardwareMap hardwareMap, Telemetry telemetry) {
         super(hardwareMap);
         this.distance = distance;
         this.maxSpeed = maxSpeed;
         this.direction = direction;
         this.telemetry = telemetry;
-    }
 
-    @Initialize
-    public void init() {
         fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
         fr = hardwareMap.dcMotor.get(Settings.FRONT_RIGHT);
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
         br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
 
-        //reverse directions for tile-runner
+        //reverse the directions for tile-runner
         /**
          fl.setDirection(DcMotor.Direction.FORWARD);
          fr.setDirection(DcMotor.Direction.REVERSE);
@@ -81,19 +70,12 @@ public class DriveState extends State {
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /**
         int currentPosition = (int)((fl.getCurrentPosition() +
                                     fr.getCurrentPosition() +
                                     bl.getCurrentPosition() +
                                     br.getCurrentPosition()) / 4.0);
-        */
-        int currentPosition = (int)((fl.getCurrentPosition() +
-                bl.getCurrentPosition() +
-                br.getCurrentPosition()) / 3.0);
 
-        //position = currentPosition + distToTicks(distance);
         position = currentPosition + TickService.inchesToTicks(distance);
-        //int flTargetPosition = getFlTargetPosition(); //need fl motor position for PID calculations
 
         setTargets(); //set target positions for each motor
 
@@ -114,20 +96,12 @@ public class DriveState extends State {
 
     @Override
     public void update() {
-        /**
-        flReached = Math.abs(fl.getCurrentPosition()) >= Math.abs(position) - threshold;
-        //frReached = Math.abs(fr.getCurrentPosition()) >= Math.abs(position) - threshold;
-        frReached = true;
-        blReached = Math.abs(bl.getCurrentPosition()) >= Math.abs(position) - threshold;
-        brReached = Math.abs(br.getCurrentPosition()) >= Math.abs(position) - threshold;
-         */
-
         flReached = Math.abs(fl.getCurrentPosition() - flTargetPosition) < threshold;
-        frReached = true;
+        frReached = Math.abs(fr.getCurrentPosition() - frTargetPosition) < threshold;
         blReached = Math.abs(bl.getCurrentPosition() - blTargetPosition) < threshold;
         brReached = Math.abs(br.getCurrentPosition() - brTargetPosition) < threshold;
 
-        realSpeed = pidDrive.getActualSpeed();
+        //realSpeed = pidDrive.getActualSpeed();
 
         if (flReached && frReached && blReached && brReached) {
             this.stop();
@@ -139,11 +113,10 @@ public class DriveState extends State {
         }
 
         telemetry.addLine("FL Diff: " + Math.abs(fl.getCurrentPosition() - flTargetPosition));
-        telemetry.addLine("FR Power: " + fl);
+        telemetry.addLine("FR Diff: " + Math.abs(fr.getCurrentPosition() - frTargetPosition));
         telemetry.addLine("BL Diff: " + Math.abs(bl.getCurrentPosition() - blTargetPosition));
         telemetry.addLine("BR Diff: " + Math.abs(br.getCurrentPosition() - brTargetPosition));
-        telemetry.addLine("actualSpeed : " + realSpeed);
-        telemetry.update();
+        //telemetry.addLine("actualSpeed : " + realSpeed);
     }
 
     @Override
@@ -217,21 +190,8 @@ public class DriveState extends State {
                 break;
         }
         fl.setTargetPosition(flTargetPosition);
-        fr.setTargetPosition(-position);
+        fr.setTargetPosition(frTargetPosition);
         bl.setTargetPosition(blTargetPosition);
         br.setTargetPosition(brTargetPosition);
-    }
-
-    public double getPower() {
-        return fr.getPower();
-    }
-
-    private int distToTicks(double distance) {
-        double circumferenceTraveled = distance / wheelCircumference;
-        return (int) (ticksPerTurn * circumferenceTraveled); //encoder value
-    }
-
-    private double getRealSpeed() {
-        return realSpeed;
     }
 }

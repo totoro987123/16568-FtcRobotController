@@ -83,7 +83,6 @@ public class Teleop extends OpMode
     @Override
     public void loop() {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        // Setup a variable for each drive wheel to save power level for telemetry
 
         //Set power for wheels based on math
 
@@ -110,12 +109,13 @@ public class Teleop extends OpMode
         double v2correction = 0;
         double v3correction = 0;
         double v4correction = 0;
+
+        //can we get the position if not set to run with encoders?
         if (strafing){
             double increment = -.25;
             int acceptableRange = 3;
             int range = 500;
-            //int newSum = fl.getCurrentPosition()+fr.getCurrentPosition()+bl.getCurrentPosition()+br.getCurrentPosition();
-            int newSum = fl.getCurrentPosition()+bl.getCurrentPosition()+br.getCurrentPosition();
+            int newSum = fl.getCurrentPosition()+fr.getCurrentPosition()+bl.getCurrentPosition()+br.getCurrentPosition();
             if (newSum-range > encoderSum){
                 v1correction = -increment;
                 v2correction = -increment;

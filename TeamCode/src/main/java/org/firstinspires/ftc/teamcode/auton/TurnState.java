@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -26,17 +27,17 @@ public class TurnState extends State {
     private AngleUnit unit = AngleUnit.DEGREES;
     private ElapsedTime runtime = new ElapsedTime();
     private int timeout = 5;
+    private Telemetry telemetry;
 
     /**
      * Default state constructor
      *
      * @param hardwareMap
      */
-    public TurnState(double gyroTarget, HardwareMap hardwareMap) {
+    public TurnState(double gyroTarget, HardwareMap hardwareMap, Telemetry telemetry) {
         super(hardwareMap);
-
-        this.running = true;
         this.gyroTarget = gyroTarget; //target angle
+        this.telemetry = telemetry;
 
         fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
         fr = hardwareMap.dcMotor.get(Settings.FRONT_RIGHT);
@@ -55,6 +56,12 @@ public class TurnState extends State {
         bl.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
 
+        //must set the runMode to run without encoder in order for it to run
+        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -68,6 +75,7 @@ public class TurnState extends State {
 
     @Override
     public void start() {
+        this.running = true;
         runtime.reset();
         lastAngle = getGyroRotation(unit); //get the initial angle, relative to beginning configuration
         gyroCorrect(gyroTarget);
@@ -82,6 +90,8 @@ public class TurnState extends State {
         else {
             gyroCorrect(gyroTarget); //re-run method to adjust speed
         }
+
+        telemetry.addLine("Current Angle: " + this.getCurrentHeading());
     }
 
     @Override
@@ -127,15 +137,13 @@ public class TurnState extends State {
 
     private double getCurrentHeading() { //the relative angle, which is after the heading becomes 0
         return getGyroRotation(unit) - lastAngle;
+        //after 90 degree turn to the right, gyroRotation is 90
+        //once the next TurnState starts, the lastAngle is 90
+        //thus currentHeading should be 0 initially
+        //target is -45, so should go just -45 to the left
     }
 
     private void turn(double power) {
-        //must set the runMode to run without encoder in order for it to run
-        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         //changed the direction
         fl.setPower(power);
         fr.setPower(-power);
