@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Settings;
-import org.firstinspires.ftc.teamcode.framework.annotations.Initialize;
 
 public class DriveState extends State {
 
@@ -49,27 +48,25 @@ public class DriveState extends State {
         this.maxSpeed = maxSpeed;
         this.direction = direction;
         this.telemetry = telemetry;
-    }
 
-    @Initialize
-    public void init() {
         fl = hardwareMap.dcMotor.get(Settings.FRONT_LEFT);
         fr = hardwareMap.dcMotor.get(Settings.FRONT_RIGHT);
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
         br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
 
         //reverse directions for tile-runner
-        /**
+
          fl.setDirection(DcMotor.Direction.FORWARD);
          fr.setDirection(DcMotor.Direction.REVERSE);
          bl.setDirection(DcMotor.Direction.FORWARD);
          br.setDirection(DcMotor.Direction.REVERSE);
-         */
 
+        /**
         fl.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.FORWARD);
         bl.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
+         */
     }
 
     @Override
@@ -87,9 +84,9 @@ public class DriveState extends State {
                                     bl.getCurrentPosition() +
                                     br.getCurrentPosition()) / 4.0);
         */
-        int currentPosition = (int)((fl.getCurrentPosition() +
+        int currentPosition = ((fl.getCurrentPosition() + fr.getCurrentPosition()+
                 bl.getCurrentPosition() +
-                br.getCurrentPosition()) / 3.0);
+                br.getCurrentPosition()) / 4);
 
         //position = currentPosition + distToTicks(distance);
         position = currentPosition + TickService.inchesToTicks(distance);
@@ -123,7 +120,7 @@ public class DriveState extends State {
          */
 
         flReached = Math.abs(fl.getCurrentPosition() - flTargetPosition) < threshold;
-        frReached = true;
+        frReached = Math.abs(fr.getCurrentPosition() - frTargetPosition) < threshold;
         blReached = Math.abs(bl.getCurrentPosition() - blTargetPosition) < threshold;
         brReached = Math.abs(br.getCurrentPosition() - brTargetPosition) < threshold;
 
@@ -217,21 +214,8 @@ public class DriveState extends State {
                 break;
         }
         fl.setTargetPosition(flTargetPosition);
-        fr.setTargetPosition(-position);
+        fr.setTargetPosition(frTargetPosition);
         bl.setTargetPosition(blTargetPosition);
         br.setTargetPosition(brTargetPosition);
-    }
-
-    public double getPower() {
-        return fr.getPower();
-    }
-
-    private int distToTicks(double distance) {
-        double circumferenceTraveled = distance / wheelCircumference;
-        return (int) (ticksPerTurn * circumferenceTraveled); //encoder value
-    }
-
-    private double getRealSpeed() {
-        return realSpeed;
     }
 }

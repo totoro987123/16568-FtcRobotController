@@ -3,10 +3,6 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.framework.SystemOpMode;
-import org.firstinspires.ftc.teamcode.framework.annotations.Loadable;
-
-
 @Autonomous(name = "AutonStateMachine")
 public class AutonStateMachine extends OpMode {
 
@@ -59,11 +55,11 @@ public class AutonStateMachine extends OpMode {
         String status = running ? "RUNNING" : "COMPLETED";
         String currentStateString = running ? currentState.toString() : "None";
 
-        /**
+
         telemetry.addLine("CurrentState: " + currentStateString);
         telemetry.addLine("Status: " + status);
         telemetry.addLine("Version: " + this.VERSION);
-         */
+
         //telemetry.update();
     }
 
