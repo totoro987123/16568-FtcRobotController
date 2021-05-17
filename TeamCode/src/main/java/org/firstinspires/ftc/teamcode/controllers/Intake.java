@@ -14,30 +14,25 @@ public class Intake {
     // Instance Variables
 
     private HardwareMap hardwareMap;
-    private DcMotor leftIntake;
-    private DcMotor rightIntake;
+    private DcMotor intakeMotor;
 
     // Constructor
     public Intake(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
 
-        this.leftIntake = this.hardwareMap.dcMotor.get("left_intake");
-        this.rightIntake = this.hardwareMap.dcMotor.get("right_intake");
+        this.intakeMotor = this.hardwareMap.dcMotor.get("intake_motor");
 
-        this.leftIntake.setDirection(DcMotor.Direction.FORWARD);
-        this.rightIntake.setDirection(DcMotor.Direction.REVERSE);
+        this.intakeMotor.setDirection(DcMotor.Direction.FORWARD);
     }
 
     // Methods
 
     public void enable() {
-        this.leftIntake.setPower(this.SPEED);
-        this.rightIntake.setPower(this.SPEED);
+        this.intakeMotor.setPower(this.SPEED);
     }
 
     public void disable() {
-        this.leftIntake.setPower(0);
-        this.rightIntake.setPower(0);
+        this.intakeMotor.setPower(0);
     }
 
     // Static Methods
