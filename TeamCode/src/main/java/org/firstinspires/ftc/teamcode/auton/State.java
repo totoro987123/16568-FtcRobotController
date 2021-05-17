@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.framework.annotations.Loadable;
-
 /**
  * This is the state abstract class with defines the functionality of a state.
  * @author Lawson Wright, Brandon Pae

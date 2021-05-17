@@ -7,4 +7,5 @@ public final class Settings {
     public static final String BACK_LEFT = "back_left";
     public static final String BACK_RIGHT = "back_right";
 
+
 }

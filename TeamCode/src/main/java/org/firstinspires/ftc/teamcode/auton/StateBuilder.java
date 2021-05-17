@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.auton;
 
-import org.firstinspires.ftc.teamcode.framework.annotations.Service;
-
 public final class StateBuilder {
 
     public static State buildStates(State[] stateSequence) {
