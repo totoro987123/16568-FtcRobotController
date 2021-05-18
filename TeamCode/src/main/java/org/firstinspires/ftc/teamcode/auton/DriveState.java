@@ -140,7 +140,6 @@ public class DriveState extends State {
         telemetry.addLine("BL Diff: " + Math.abs(bl.getCurrentPosition() - blTargetPosition));
         telemetry.addLine("BR Diff: " + Math.abs(br.getCurrentPosition() - brTargetPosition));
         telemetry.addLine("actualSpeed : " + realSpeed);
-        telemetry.update();
     }
 
     @Override
