@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.controllers;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Settings;
+
 public class Intake {
 
     // Static Variables
@@ -20,7 +22,7 @@ public class Intake {
     public Intake(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
 
-        this.intakeMotor = this.hardwareMap.dcMotor.get("intake");
+        this.intakeMotor = this.hardwareMap.dcMotor.get(Settings.INTAKE);
 
         this.intakeMotor.setDirection(DcMotor.Direction.FORWARD);
     }

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.controllers;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Settings;
+
 public class Ramp {
 
     // Static Variables
@@ -20,7 +22,7 @@ public class Ramp {
     public Ramp(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
 
-        this.rampMotor = this.hardwareMap.dcMotor.get("ramp");
+        this.rampMotor = this.hardwareMap.dcMotor.get(Settings.RAMP);
 
         this.rampMotor.setDirection(DcMotor.Direction.FORWARD);
     }
