@@ -10,5 +10,5 @@ public final class Settings {
 
     // Other Motors
     public static final String INTAKE = "intake";
-    public static final String RAMP = "ramp"; // Update this
+    public static final String RAMP = "conveyor"; // Update this
 }

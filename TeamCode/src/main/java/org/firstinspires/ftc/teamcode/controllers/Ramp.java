@@ -11,7 +11,7 @@ public class Ramp {
     private static Ramp ramp = null;
 
     // Final Settings
-    private final double SPEED = 1;
+    private final double SPEED = .33;
 
     // Instance Variables
 

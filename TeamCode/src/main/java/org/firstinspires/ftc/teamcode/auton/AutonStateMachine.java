@@ -25,7 +25,7 @@ public class AutonStateMachine extends OpMode {
      */
     @Override
     public void init() {
-        State[] stateSequence = {
+        State[] defaultStateSequence = {
                 new StartIntakeState(hardwareMap),
                 new StartRampState(hardwareMap),
                 new DriveState(10, 0.8, "front", hardwareMap, telemetry),
@@ -36,7 +36,8 @@ public class AutonStateMachine extends OpMode {
                 //new TurnState(90, hardwareMap),
                 //new TurnState(-45, hardwareMap)
         };
-        headerState = StateBuilder.buildStates(stateSequence);
+
+        headerState = StateBuilder.buildStates(defaultStateSequence);
     }
 
     /**
@@ -52,19 +53,20 @@ public class AutonStateMachine extends OpMode {
         State currentState = headerState.getCurrentState();
         boolean running = currentState != null;
 
+        String status = running ? "RUNNING" : "COMPLETED";
+        String currentStateString = running ? currentState.toString() : "None";
+
+        // State telemetry
+        telemetry.addLine("CurrentState: " + currentStateString);
+        telemetry.addLine("Status: " + status);
+
+        // Update State
         if (running) {
             currentState.update();
         }
 
-        String status = running ? "RUNNING" : "COMPLETED";
-        String currentStateString = running ? currentState.toString() : "None";
-
-
-        telemetry.addLine("CurrentState: " + currentStateString);
-        telemetry.addLine("Status: " + status);
+        // Version telemetry.
         telemetry.addLine("Version: " + this.VERSION);
-
-        //telemetry.update();
     }
 
     @Override
