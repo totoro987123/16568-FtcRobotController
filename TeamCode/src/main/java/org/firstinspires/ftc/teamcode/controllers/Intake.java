@@ -5,10 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Settings;
 
-public class Intake {
-
-    // Static Variables
-    private static Intake intake = null;
+public class Intake extends Controller {
 
     // Final Settings
     private final double SPEED = 1;
@@ -35,14 +32,5 @@ public class Intake {
 
     public void disable() {
         this.intakeMotor.setPower(0);
-    }
-
-    // Static Methods
-    public static Intake getInstance(HardwareMap hardwareMap) {
-        if (intake == null) {
-            intake = new Intake(hardwareMap);
-        }
-
-        return intake;
     }
 }

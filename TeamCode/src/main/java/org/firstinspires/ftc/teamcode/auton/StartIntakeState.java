@@ -11,7 +11,7 @@ public class StartIntakeState extends State {
     public StartIntakeState(HardwareMap hardwareMap) {
         super(hardwareMap);
 
-        this.intake = Intake.getInstance(hardwareMap);
+        this.intake = Intake.getInstance(Intake.class, hardwareMap);
     }
 
     @Override
