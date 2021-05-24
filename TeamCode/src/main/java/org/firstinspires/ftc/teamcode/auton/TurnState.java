@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.Settings;
+import org.firstinspires.ftc.teamcode.controllers.IMU;
 
 public class TurnState extends State {
 
@@ -17,14 +18,14 @@ public class TurnState extends State {
     private DcMotor fr;
     private DcMotor bl;
     private DcMotor br;
-    private BNO055IMU imu;
-    private BNO055IMU.Parameters parameters;
-    private float lastAngle = 0;
+
+    private final IMU imu;
+
     private double gyroTarget;
     private final double gyroRange = 5;
-    private final double minSpeed = 0.15;
-    private final double addSpeed = 0.1;
-    private AngleUnit unit = AngleUnit.DEGREES;
+    //private final double minSpeed = 0.15;
+    //private final double addSpeed = 0.1;
+
     private ElapsedTime runtime = new ElapsedTime();
     private int timeout = 5;
     private Telemetry telemetry;
@@ -35,6 +36,9 @@ public class TurnState extends State {
      */
     public TurnState(double gyroTarget, HardwareMap hardwareMap, Telemetry telemetry) {
         super(hardwareMap);
+
+        this.imu = IMU.getInstance(hardwareMap);
+
         this.gyroTarget = gyroTarget; //target angle
         this.telemetry = telemetry;
 
@@ -42,13 +46,15 @@ public class TurnState extends State {
         fr = hardwareMap.dcMotor.get(Settings.FRONT_RIGHT);
         bl = hardwareMap.dcMotor.get(Settings.BACK_LEFT);
         br = hardwareMap.dcMotor.get(Settings.BACK_RIGHT);
+    }
 
-        /**
-         fl.setDirection(DcMotor.Direction.FORWARD);
-         fr.setDirection(DcMotor.Direction.REVERSE);
-         bl.setDirection(DcMotor.Direction.FORWARD);
-         br.setDirection(DcMotor.Direction.REVERSE);
-         */
+    @Override
+    public void start() {
+        this.running = true;
+        runtime.reset();
+
+        this.imu.initialize();
+        this.imu.setDefaultOrientation();
 
         fl.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.FORWARD);
@@ -61,36 +67,19 @@ public class TurnState extends State {
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        imu.initialize(parameters);
-    }
-
-    @Override
-    public void start() {
-        this.running = true;
-        runtime.reset();
-        lastAngle = getGyroRotation(unit); //get the initial angle, relative to beginning configuration
-        gyroCorrect(gyroTarget);
+        turn(.5);
     }
 
     @Override
     public void update() {
-        if (Math.abs(gyroTarget - getCurrentHeading()) < gyroRange || runtime.seconds() > timeout) { //reached target or too much elapsed time
+        if (Math.abs(gyroTarget - imu.getOrientation()) < gyroRange || runtime.seconds() > timeout) { //reached target or too much elapsed time
             this.stop();
             this.goToNextState();
-        }
-        else {
-            gyroCorrect(gyroTarget); //re-run method to adjust speed
+        } else {
+            //gyroCorrect(gyroTarget); //re-run method to adjust speed
         }
 
-        telemetry.addLine("Current Angle: " + this.getCurrentHeading());
+        telemetry.addLine("Current Angle: " + this.imu.getOrientation());
     }
 
     @Override
@@ -101,10 +90,10 @@ public class TurnState extends State {
 
     @Override
     public String toString() {
-        return null;
+        return "Turn state";
     }
 
-    private void gyroCorrect(double gyroTarget) {
+    /**private void gyroCorrect(double gyroTarget) {
         //current heading or angle
         double gyroActual = getCurrentHeading();
 
@@ -132,15 +121,7 @@ public class TurnState extends State {
         } else {
             turn(0.0);
         }
-    }
-
-    private double getCurrentHeading() { //the relative angle, which is after the heading becomes 0
-        return getGyroRotation(unit) - lastAngle;
-        //after 90 degree turn to the right, gyroRotation is 90
-        //once the next TurnState starts, the lastAngle is 90
-        //thus currentHeading should be 0 initially
-        //target is -45, so should go just -45 to the left
-    }
+    }*/
 
     private void turn(double power) {
         //changed the direction
@@ -150,9 +131,4 @@ public class TurnState extends State {
         br.setPower(-power);
     }
 
-    //returns current angle, relative to initial initialization angle (not relative to last position)
-    private float getGyroRotation(AngleUnit unit) {
-        //first angle = the x-coordinate, or heading
-        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, unit).firstAngle;
-    }
 }
