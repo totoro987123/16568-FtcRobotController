@@ -5,11 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Settings;
 
-public class Ramp {
-
-    // Static Variables
-    private static Ramp ramp = null;
-
+public class Ramp extends Controller {
     // Final Settings
     private final double SPEED = .33;
 
@@ -35,14 +31,5 @@ public class Ramp {
 
     public void disable() {
         this.rampMotor.setPower(0);
-    }
-
-    // Static Methods
-    public static Ramp getInstance(HardwareMap hardwareMap) {
-        if (ramp == null) {
-            ramp = new Ramp(hardwareMap);
-        }
-
-        return ramp;
     }
 }

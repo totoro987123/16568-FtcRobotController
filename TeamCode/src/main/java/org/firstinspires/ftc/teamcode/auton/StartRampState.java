@@ -11,12 +11,12 @@ public class StartRampState extends State {
     public StartRampState(HardwareMap hardwareMap) {
         super(hardwareMap);
 
-        this.ramp = Ramp.getInstance(hardwareMap);
+        this.ramp = Ramp.getInstance(Ramp.class, hardwareMap);
     }
 
     @Override
     public String toString() {
-        return "StartInputState";
+        return "StartRampState";
     }
 
     @Override

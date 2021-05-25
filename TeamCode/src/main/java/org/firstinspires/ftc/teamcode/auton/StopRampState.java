@@ -11,7 +11,7 @@ public class StopRampState extends State {
     public StopRampState(HardwareMap hardwareMap) {
         super(hardwareMap);
 
-        this.ramp = Ramp.getInstance(hardwareMap);
+        this.ramp = Ramp.getInstance(Ramp.class, hardwareMap);
     }
 
     @Override
