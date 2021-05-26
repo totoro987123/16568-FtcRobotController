@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Settings;
 import org.firstinspires.ftc.teamcode.controllers.IMU;
 import org.firstinspires.ftc.teamcode.controllers.Intake;
+import org.firstinspires.ftc.teamcode.controllers.Outtake;
 import org.firstinspires.ftc.teamcode.controllers.Ramp;
 
 @TeleOp(name="Teleop", group="Iterative Opmode")
@@ -31,16 +32,19 @@ public class Teleop extends OpMode {
     //Controllers
     private Ramp ramp;
     private Intake intake;
+    private Outtake outtake;
     private IMU imu;
 
     //Gamepad
     private boolean aPressedLastCycle = false;
+    private boolean bPressedLastCycle = false;
 
 
     @Override
     public void init() {
-        this.intake = Intake.getInstance(Intake.class, hardwareMap);
         this.ramp = Ramp.getInstance(Ramp.class, hardwareMap);
+        this.intake = Intake.getInstance(Intake.class, hardwareMap);
+        this.outtake = Outtake.getInstance(Outtake.class, hardwareMap);
         this.imu = IMU.getInstance(IMU.class, hardwareMap);
 
         // Wheel init
@@ -89,6 +93,12 @@ public class Teleop extends OpMode {
         }
         this.aPressedLastCycle = this.gamepad1.a;
 
+        //Outtake
+        if ((!this.bPressedLastCycle) && this.gamepad1.b) {
+            this.outtake.toggle();
+        }
+        this.bPressedLastCycle = this.gamepad1.b;
+
         // Telemetry output
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addLine("Angle: " + String.valueOf(this.imu.getOrientation()));
@@ -98,6 +108,7 @@ public class Teleop extends OpMode {
 
     @Override
     public void stop() {
+        this.outtake.disable();
         this.intake.disable();
         this.ramp.disable();
         this.imu.close();

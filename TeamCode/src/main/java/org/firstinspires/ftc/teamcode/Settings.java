@@ -11,4 +11,6 @@ public final class Settings {
     // Other Motors
     public static final String INTAKE = "intake";
     public static final String RAMP = "conveyor"; // Update this
+    public static final String OUTTAKE_LEFT = "outtake_left";
+    public static final String OUTTAKE_RIGHT = "outtake_right";
 }
