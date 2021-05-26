@@ -33,7 +33,7 @@ public class Teleop extends OpMode {
     private Intake intake;
     private IMU imu;
 
-    //Gamepas
+    //Gamepad
     private boolean aPressedLastCycle = false;
 
 
