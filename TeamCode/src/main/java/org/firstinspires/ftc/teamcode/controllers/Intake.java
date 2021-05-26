@@ -14,6 +14,7 @@ public class Intake extends Controller {
 
     private HardwareMap hardwareMap;
     private DcMotor intakeMotor;
+    private boolean isActive = false;
 
     // Constructor
     public Intake(HardwareMap hardwareMap) {
@@ -27,10 +28,25 @@ public class Intake extends Controller {
     // Methods
 
     public void enable() {
+        this.isActive = true;
         this.intakeMotor.setPower(this.SPEED);
     }
 
     public void disable() {
+        this.isActive = false;
         this.intakeMotor.setPower(0);
+    }
+
+    public boolean isActive() {
+        return this.isActive;
+    }
+
+    public void toggle() {
+        if (this.isActive) {
+            this.disable();
+            return;
+        }
+
+        this.enable();
     }
 }

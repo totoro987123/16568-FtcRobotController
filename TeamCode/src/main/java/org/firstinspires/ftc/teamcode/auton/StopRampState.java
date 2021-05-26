@@ -25,7 +25,6 @@ public class StopRampState extends State {
         this.goToNextState();
     }
 
-    // Test2
     @Override
     public void update() {
 

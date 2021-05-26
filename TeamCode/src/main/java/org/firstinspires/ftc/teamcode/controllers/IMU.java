@@ -7,11 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-public class IMU {
-
-    // Static Variables
-    private static IMU imu = null;
-
+public class IMU extends Controller {
 
     // Instance Variables
     private boolean inited = false;
@@ -56,12 +52,4 @@ public class IMU {
         return this.imuInstance.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, unit).firstAngle;
     }
 
-    // Static Methods
-    public static IMU getInstance(HardwareMap hardwareMap) {
-        if (imu == null) {
-            imu = new IMU(hardwareMap);
-        }
-
-        return imu;
-    }
 }

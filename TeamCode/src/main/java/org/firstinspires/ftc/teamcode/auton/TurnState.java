@@ -37,7 +37,7 @@ public class TurnState extends State {
     public TurnState(double gyroTarget, HardwareMap hardwareMap, Telemetry telemetry) {
         super(hardwareMap);
 
-        this.imu = IMU.getInstance(hardwareMap);
+        this.imu = IMU.getInstance(IMU.class, hardwareMap);
 
         this.gyroTarget = gyroTarget; //target angle
         this.telemetry = telemetry;

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Settings;
 
 public class Ramp extends Controller {
     // Final Settings
-    private final double SPEED = .33;
+    private final double MAX_SPEED = .33;
 
     // Instance Variables
 
@@ -25,11 +25,19 @@ public class Ramp extends Controller {
 
     // Methods
 
+    public void setPower(final double power) {
+        this.rampMotor.setPower(power);
+    }
+
     public void enable() {
-        this.rampMotor.setPower(this.SPEED);
+        this.setPower(this.MAX_SPEED);
     }
 
     public void disable() {
         this.rampMotor.setPower(0);
+    }
+
+    public void setPowerPercent(float Percent) {
+        this.setPower(MAX_SPEED * Percent);
     }
 }
