@@ -98,5 +98,8 @@ public class Teleop extends OpMode {
 
     @Override
     public void stop() {
+        this.intake.disable();
+        this.ramp.disable();
+        this.imu.close();
     }
 }

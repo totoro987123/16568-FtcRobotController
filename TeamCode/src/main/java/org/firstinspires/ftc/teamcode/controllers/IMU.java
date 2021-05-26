@@ -52,4 +52,8 @@ public class IMU extends Controller {
         return this.imuInstance.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, unit).firstAngle;
     }
 
+    public void close() {
+        this.imuInstance.close();
+    }
+
 }
