@@ -54,7 +54,7 @@ public class IMU extends Controller {
 
     public void close() {
         this.imuInstance.close();
-        controller = null;
+        controllers.remove(this.getClass());
     }
 
 }
