@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Controller {
 
-    private static Controller controller;
+    protected static Controller controller;
 
     public static <T extends Controller> T getInstance(Class<T> clazz, HardwareMap hardwareMap) {
 

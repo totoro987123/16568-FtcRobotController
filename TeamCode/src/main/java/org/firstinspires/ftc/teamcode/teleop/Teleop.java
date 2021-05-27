@@ -39,7 +39,6 @@ public class Teleop extends OpMode {
     private boolean aPressedLastCycle = false;
     private boolean bPressedLastCycle = false;
 
-
     @Override
     public void init() {
         this.ramp = Ramp.getInstance(Ramp.class, hardwareMap);

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.controllers.IMU;
+
 @Autonomous(name = "AutonStateMachine")
 public class AutonStateMachine extends OpMode {
 
@@ -17,6 +19,8 @@ public class AutonStateMachine extends OpMode {
      */
     private State headerState;
 
+    private IMU imu;
+
     // METHODS
 
 
@@ -26,10 +30,16 @@ public class AutonStateMachine extends OpMode {
     @Override
     public void init() {
         State[] defaultStateSequence = {
+                new StartRampState(hardwareMap),
+                new DriveState(10, 0.8, "front", hardwareMap, telemetry),
                 new TurnState(90, hardwareMap, telemetry),
-                new TurnState(-180, hardwareMap, telemetry)
+                new StopRampState(hardwareMap),
+                new StartIntakeState(hardwareMap),
+                new DriveState(10, 0.8, "front", hardwareMap, telemetry),
+                new TurnState(-180, hardwareMap, telemetry),
+                new StopIntakeState(hardwareMap),
 
-        //new StartIntakeState(hardwareMap),
+                //new StartIntakeState(hardwareMap),
                 //new DriveState(10, 0.8, "front", hardwareMap, telemetry),
                 //new StopIntakeState(hardwareMap),
                 //new StartRampState(hardwareMap),
@@ -41,6 +51,8 @@ public class AutonStateMachine extends OpMode {
                 //new TurnState(-45, hardwareMap)
         };
 
+        this.imu = IMU.getInstance(IMU.class, hardwareMap);
+
         headerState = StateBuilder.buildStates(defaultStateSequence);
     }
 
@@ -49,6 +61,7 @@ public class AutonStateMachine extends OpMode {
      */
     @Override
     public void start() {
+        this.imu.setDefaultOrientation();
         this.headerState.start();
     }
 
@@ -63,6 +76,7 @@ public class AutonStateMachine extends OpMode {
         // State telemetry
         telemetry.addLine("CurrentState: " + currentStateString);
         telemetry.addLine("Status: " + status);
+        telemetry.addLine("Orientation: " + this.imu.getOrientation());
 
         // Update State
         if (running) {
@@ -80,5 +94,7 @@ public class AutonStateMachine extends OpMode {
         if (currentState != null) {
             currentState.stop();
         }
+
+        this.imu.close();
     }
 }
