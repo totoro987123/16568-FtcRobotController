@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Settings;
 public class Intake extends Controller {
 
     // Final Settings
-    private final double SPEED = 1;
+    private final double SPEED = .75;
 
     // Instance Variables
 

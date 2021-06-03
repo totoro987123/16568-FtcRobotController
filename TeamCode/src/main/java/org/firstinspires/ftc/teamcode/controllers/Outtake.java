@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.controllers;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Settings;
 
-public class Outtake extends Controller  {
+public class Outtake extends Controller {
     // Final Settings
-    private final double SPEED = 1;
+    private final double SPEED = .5;
 
     // Instance Variables
 
@@ -26,7 +27,7 @@ public class Outtake extends Controller  {
         this.outtakeMotorRight = this.hardwareMap.dcMotor.get(Settings.OUTTAKE_RIGHT);
 
         this.outtakeMotorLeft.setDirection(DcMotor.Direction.FORWARD);
-        this.outtakeMotorLeft.setDirection(DcMotor.Direction.REVERSE);
+        this.outtakeMotorRight.setDirection(DcMotor.Direction.REVERSE);
 
     }
 

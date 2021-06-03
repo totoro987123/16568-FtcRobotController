@@ -30,14 +30,7 @@ public class AutonStateMachine extends OpMode {
     @Override
     public void init() {
         State[] defaultStateSequence = {
-                new StartRampState(hardwareMap),
-                new DriveState(10, 0.8, "front", hardwareMap, telemetry),
-                new TurnState(90, hardwareMap, telemetry),
-                new StopRampState(hardwareMap),
-                new StartIntakeState(hardwareMap),
-                new DriveState(10, 0.8, "front", hardwareMap, telemetry),
-                new TurnState(-180, hardwareMap, telemetry),
-                new StopIntakeState(hardwareMap),
+                new DriveState(84, 0.8, "front", hardwareMap, telemetry)
 
                 //new StartIntakeState(hardwareMap),
                 //new DriveState(10, 0.8, "front", hardwareMap, telemetry),
