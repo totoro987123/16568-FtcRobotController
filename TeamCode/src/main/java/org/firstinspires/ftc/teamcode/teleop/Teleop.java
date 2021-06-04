@@ -29,6 +29,9 @@ public class Teleop extends OpMode {
     private DcMotor bl = null;
     private DcMotor br = null;
 
+    //Settings
+    private double speedFactor = 1;
+
     //Controllers
     private Ramp ramp;
     private Intake intake;
@@ -38,6 +41,7 @@ public class Teleop extends OpMode {
     //Gamepad
     private boolean aPressedLastCycle = false;
     private boolean bPressedLastCycle = false;
+    private boolean dPadLastPressed = false;
 
     @Override
     public void init() {
@@ -76,11 +80,27 @@ public class Teleop extends OpMode {
         double strafe = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x;
 
+        //DPad
+        if (!this.dPadLastPressed) {
+            if (this.gamepad1.dpad_up) {
+                this.speedFactor = this.speedFactor + .1;
+            } else if(this.gamepad2.dpad_down) {
+                this.speedFactor = this.speedFactor - .1;
+            }
+        }
+        this.dPadLastPressed = this.gamepad1.dpad_up || this.gamepad1.dpad_down;
+
+        if (this.speedFactor > 1) {
+            this.speedFactor = 1;
+        } else if (this.speedFactor < 0) {
+            this.speedFactor = 0;
+        }
+
         // Send calculated power to wheels
-        fl.setPower(drive - strafe - turn);
-        fr.setPower(drive + strafe + turn);
-        bl.setPower(drive + strafe - turn);
-        br.setPower(drive - strafe + turn);
+        fl.setPower((drive - strafe - turn) * this.speedFactor);
+        fr.setPower((drive + strafe + turn) * this.speedFactor);
+        bl.setPower((drive + strafe - turn) * this.speedFactor);
+        br.setPower((drive - strafe + turn) * this.speedFactor);
 
         //Ramp Power
         float percent = gamepad1.left_trigger - gamepad1.right_trigger;
@@ -100,6 +120,7 @@ public class Teleop extends OpMode {
 
         // Telemetry output
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addLine("Speed Factor: " + String.valueOf(this.speedFactor));
         telemetry.addLine("Angle: " + String.valueOf(this.imu.getOrientation()));
 
         telemetry.update();
